@@ -1,52 +1,41 @@
 name: Snyk Security Scans
-on: [push, pull_request]
+on: push
 
 jobs:
-  snyk-java-scan:
+  snyk-java:
     name: Snyk Java Scan
     runs-on: ubuntu-latest
-    env:
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Install Snyk
-        run: npm install -g snyk
-      - name: Run Snyk Test Java
-        run: snyk test ./snyk/java --severity-threshold=high
+      - uses: actions/checkout@master
+      - name: Run Snyk to check Java vulnerabilities
+        uses: snyk/actions/maven@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
 
-  snyk-javascript-scan:
+  snyk-javascript:
     name: Snyk JavaScript Scan
     runs-on: ubuntu-latest
-    env:
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Install Snyk
-        run: npm install -g snyk
-      - name: Install Node Dependencies
-        working-directory: ./snyk/javascripts
-        run: npm install
-      - name: Run Snyk Test JavaScript
-        run: snyk test ./snyk/javascripts --severity-threshold=high
+      - uses: actions/checkout@master
+      - name: Run Snyk to check JavaScript vulnerabilities
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+          command: test ./snyk/javascripts
 
-  snyk-python-scan:
+  snyk-python:
     name: Snyk Python Scan
     runs-on: ubuntu-latest
-    env:
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Install Snyk
-        run: npm install -g snyk
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@master
+      - name: Run Snyk to check Python vulnerabilities
+        uses: snyk/actions/python@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          python-version: '3.x'
-      - name: Install Python Dependencies
-        working-directory: ./snyk/python
-        run: pip install -r requirements.txt
-      - name: Run Snyk Test Python
-        run: snyk test ./snyk/python --severity-threshold=high
+          args: --severity-threshold=high
+          command: test ./snyk/python
