@@ -21,6 +21,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --severity-threshold=high
+          command: test ./snyk/java
 
   snyk-javascript:
     name: Snyk JavaScript Scan
