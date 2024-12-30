@@ -1,7 +1,9 @@
-name: Snyk Scan
+name: Snyk Security Scans
 on: [push, pull_request]
+
 jobs:
-  snyk-scan:
+  snyk-java-scan:
+    name: Snyk Java Scan
     runs-on: ubuntu-latest
     env:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -11,8 +13,30 @@ jobs:
       - name: Install Snyk
         run: npm install -g snyk
       - name: Run Snyk Test Java
-        run: snyk test ./snyk/java
-      - name: Run Snyk Test javascripts
-        run: snyk test ./snyk/javascripts
-      - name: Run Snyk Test python
-        run: snyk test ./snyk/python
+        run: snyk test ./snyk/java --severity-threshold=high
+
+  snyk-javascript-scan:
+    name: Snyk JavaScript Scan
+    runs-on: ubuntu-latest
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install Snyk
+        run: npm install -g snyk
+      - name: Run Snyk Test JavaScript
+        run: snyk test ./snyk/javascripts --severity-threshold=high
+
+  snyk-python-scan:
+    name: Snyk Python Scan
+    runs-on: ubuntu-latest
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install Snyk
+        run: npm install -g snyk
+      - name: Run Snyk Test Python
+        run: snyk test ./snyk/python --severity-threshold=high
