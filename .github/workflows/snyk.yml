@@ -7,6 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Build with Maven
+        working-directory: ./snyk/java
+        run: mvn install -DskipTests=true
       - name: Run Snyk to check Java vulnerabilities
         uses: snyk/actions/maven@master
         env:
